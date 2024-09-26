@@ -21,7 +21,7 @@ static int __init GPIO_init(void)
         return -ENOMEM;  // Return error code for memory allocation failure
     }
 
-    // Set GPIO pin 28 as output by clearing the corresponding bit in the Output Enable register
+    // Set GPIO pin 30 as output by clearing the corresponding bit in the Output Enable register
     *(gpio0_base_addr + GPIO_OE_OFFSET / 4) &= ~GPIO0_30;
 
     // Set the pin high (turn the LED on) by setting the corresponding bit in the Set Data Out register
@@ -35,7 +35,7 @@ static int __init GPIO_init(void)
 /* Destructor: Cleans up the driver before exit */
 static void __exit GPIO_exit(void)
 {
-    // Clear the GPIO pin 28 (turn the LED off) by setting the corresponding bit in the Clear Data Out register
+    // Clear the GPIO pin 30 (turn the LED off) by setting the corresponding bit in the Clear Data Out register
     *(gpio0_base_addr + GPIO_CLEARDATAOUT_OFFSET / 4) |= GPIO0_30;
 
     // Unmap the memory that was mapped using ioremap
