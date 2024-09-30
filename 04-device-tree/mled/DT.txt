@@ -1,27 +1,12 @@
-
 / {
 	#address-cells = <1>;
 	#size-cells = <1>;
 
-	m_led {
-		compatible = "bbb-led,dt";
-		// reg = <0x44E07000 0x1000>;
-		// red-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
-		// green-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-		mled_gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
+	foo_device{
+		compatible = "gpio_base_myself";
+		led30-gpios = <&gpio0 30 GPIO_ACTIVE_HIGH>;
 		status = "okay";
 	};
-
-	// foo_device {
-	//	compatible = "gpio,foo";
-	//	led-gpios = <&gpio 15 GPIO_ACTIVE_HIGH>,
-	//				<&gpio 16 GPIO_ACTIVE_HIGH>,
-	//				<&gpio 17 GPIO_ACTIVE_HIGH>;
-
-	//	power-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-	//	reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-	//};
-
 };
 
 

@@ -1,50 +1,52 @@
-#include <linux/module.h>     /* defines functions such as module_init/module_exit */
-#include <linux/platform_device.h>  /* For platform device */
-#include <linux/gpio/consumer.h> /* For GPIO Descriptor */
-#include <linux/of.h>  /* For device tree*/
+#include <linux/module.h>           /* Defines functions such as module_init/module_exit */
+#include <linux/gpio.h>             /* Defines functions such as gpio_request/gpio_free */
+#include <linux/platform_device.h>  /* For platform devices */
+#include <linux/gpio/consumer.h>    /* For GPIO Descriptor */
+#include <linux/of.h>               /* For DT */  
 
-#define DRIVER_AUTHOR   "phonglt15_linuxfromscratch@gmail.com"
-#define DRIVER_DESC     "LED blinking"
+#define DRIVER_AUTHOR   "TungNHS"
+#define DRIVER_DESC     "gpio test device tree"
 
-static struct gpio_desc *LED;
+#define LOW     0
+#define HIGH    1
 
-static const struct of_device_id gpio_led_dt_ids[] = {
-    { .compatible = "bbd-led,dts", },
+struct gpio_desc *gpio0_30;
+
+static const struct of_device_id gpiod_dt_ids[] = {
+    { .compatible = "gpio_base_myself", },
     { /* sentinel */ }
 };
 
-static int led_probe(struct platform_device *pdev)
+static int my_pdrv_probe(struct platform_device *pdev)
 {
     struct device *dev = &pdev->dev;
+    gpio0_30 = gpiod_get(dev, "led30", GPIOD_OUT_LOW);
+    gpiod_set_value(gpio0_30, HIGH);
 
-    LED = gpiod_get(dev, "mled", 0, GPIOD_OUT_HIGH);
-    gpiod_set_value(LED, 1);
-
-    // LED = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
-
-    pr_info("Hello! Driver probe successfully!\n");
+    pr_info("%s - %d", __func__, __LINE__);
     return 0;
 }
 
-static int led_remove(struct platform_device *pdev)
+static int my_pdrv_remove(struct platform_device *pdev)
 {
-    gpiod_put(LED);
+    gpiod_set_value(gpio0_30, LOW);
+    gpiod_put(gpio0_30);
 
-    pr_info("Good bye my fen !!\n");
+    pr_info("%s - %d", __func__, __LINE__);
     return 0;
 }
 
-static struct platform_driver my_led_drv = {
-    .probe  = led_probe,
-    .remove = led_remove,
+/* platform driver */
+static struct platform_driver mypdrv = {
+    .probe = my_pdrv_probe,
+    .remove = my_pdrv_remove,
     .driver = {
-        .name = "bbd_led_dt_sample",
-        .of_match_table = of_match_ptr(gpio_led_dt_ids),
+        .name = "descriptor-based",
+        .of_match_table = of_match_ptr(gpiod_dt_ids),
         .owner = THIS_MODULE,
     },
 };
-
-module_platform_driver(my_led_drv);
+module_platform_driver(mypdrv);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR(DRIVER_AUTHOR);
