@@ -17,7 +17,10 @@ static int led_probe(struct platform_device *pdev)
 {
     struct device *dev = &pdev->dev;
 
-    LED = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
+    LED = gpiod_get(dev, "mled", 0, GPIOD_OUT_HIGH);
+    gpiod_set_value(LED, 1);
+
+    // LED = gpiod_get_index(dev, "led", 0, GPIOD_OUT_HIGH);
 
     pr_info("Hello! Driver probe successfully!\n");
     return 0;
